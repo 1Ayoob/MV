@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Streaming</title>
+    <style>
+        body {
+            background-color: #141414;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: black;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .search {
+            padding: 10px;
+            width: 250px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+        .movies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .movie {
+            width: 200px;
+            text-align: center;
+        }
+        img {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .player-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+        video {
+            width: 80%;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">MyFlix</div>
+        <input type="text" class="search" id="search" placeholder="Search movies..." onkeyup="searchMovies()">
+    </div>
+    <div class="movies" id="movies"></div>
+    
+    <div class="player-container" id="player-container">
+        <video id="video-player" controls></video>
+    </div>
+
+    <script>
+        async function searchMovies() {
+            let query = document.getElementById('search').value;
+            if (query.length < 3) return;
+            let response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=8db63027&query=${query}`);
+            let data = await response.json();
+            document.getElementById('movies').innerHTML = data.results.map(movie => `
+                <div class="movie" onclick="playMovie('${movie.title}')">
+                    <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                    <h3>${movie.title}</h3>
+                </div>
+            `).join('');
+        }
+
+        function playMovie(title) {
+            let videoPlayer = document.getElementById('video-player');
+            videoPlayer.src = `https://www.youtube.com/embed/dummy_trailer_link`; // Replace with actual video links
+            document.getElementById('player-container').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
